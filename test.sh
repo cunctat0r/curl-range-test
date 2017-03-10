@@ -10,7 +10,7 @@ LOGFILE="./curl_log.log"
 getRangeHTTP () {
     MIN_RANGE=$1
     MAX_RANGE=$2
-    curl -r 0-$MAX_RANGE https://cdn.keycdn.com/img/cdn-stats.png > $LOGFILE 2>/dev/null
+    curl -r $MIN_RANGE-$MAX_RANGE https://cdn.keycdn.com/img/cdn-stats.png > $LOGFILE 2>/dev/null
     FILESIZE=$(stat -c%s "$LOGFILE")
 }
 
@@ -31,7 +31,7 @@ cleanup () {
 }
 
 setup () {
-
+    :
 }
 
 getRangeHTTPNormal () {
