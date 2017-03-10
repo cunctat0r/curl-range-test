@@ -5,10 +5,34 @@
 #
 FUNCTION_LIST=(getRangeHTTPNormal getRangeFTPNormal getRangeHTTPZero getRangeFTPZero getRangeHTTPNegative getRangeFTPNegative)
 
+LOGFILE="./curl_log.log"
+
+getRangeHTTP () {
+    MIN_RANGE=$1
+    MAX_RANGE=$2
+    curl -r 0-$MAX_RANGE https://cdn.keycdn.com/img/cdn-stats.png > $LOGFILE 2>/dev/null
+    FILESIZE=$(stat -c%s "$LOGFILE")
+}
+
+makeDecision () {
+    if [ $FILESIZE = $2 ]
+    then
+        echo "$1 PASS!"
+    else
+        echo "$1 FAIL!"
+    fi
+}
+
+cleanup () {
+    if [ -f $LOGFILE ]
+    then
+        rm $LOGFILE
+    fi
+}
+
 getRangeHTTPNormal () {
-    # curl -r 0-99 https://cdn.keycdn.com/img/cdn-stats.png > test 2>/dev/null
-    local x=1
-    echo "running $x"
+    getRangeHTTP 0 99
+    makeDecision "getRangeHTTPNormal" 100
 }
 
 getRangeFTPNormal () {
@@ -17,8 +41,8 @@ getRangeFTPNormal () {
 }
 
 getRangeHTTPZero () {
-    local x=3
-    echo "running $x"
+    getRangeHTTP 0 0
+    makeDecision "getRangeHTTPZero" 1
 }
 
 getRangeFTPZero () {
@@ -64,3 +88,4 @@ else
     done
 fi
 
+cleanup
