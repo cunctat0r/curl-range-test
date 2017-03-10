@@ -6,11 +6,13 @@
 FUNCTION_LIST=(getRangeHTTPNormal getRangeFTPNormal getRangeHTTPZero getRangeFTPZero getRangeHTTPNegative getRangeFTPNegative)
 
 LOGFILE="./curl_log.log"
+HTTP_FILE="https://cdn.keycdn.com/img/cdn-stats.png"
+HTTP_ERROR_MESSAGE="416 Requested Range Not Satisfiable"
 
 getRangeHTTP () {
     MIN_RANGE=$1
     MAX_RANGE=$2
-    curl -r $MIN_RANGE-$MAX_RANGE https://cdn.keycdn.com/img/cdn-stats.png > $LOGFILE 2>/dev/null
+    curl -r $MIN_RANGE-$MAX_RANGE $HTTP_FILE > $LOGFILE 2>/dev/null
     FILESIZE=$(stat -c%s "$LOGFILE")
 }
 
@@ -56,7 +58,7 @@ getRangeFTPZero () {
 
 getRangeHTTPNegative () {
     getRangeHTTP -1 0
-    RESPONSE=`cat $LOGFILE | grep "416 Requested Range Not Satisfiable"`
+    RESPONSE=`cat $LOGFILE | grep "$HTTP_ERROR_MESSAGE"`
     if [ -n "$RESPONSE" ]
     then
         echo "getRangeHTTPNegative PASS!"
