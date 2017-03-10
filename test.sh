@@ -55,8 +55,14 @@ getRangeFTPZero () {
 }
 
 getRangeHTTPNegative () {
-    local x=5
-    echo "running $x"
+    getRangeHTTP -1 0
+    RESPONSE=`cat $LOGFILE | grep "416 Requested Range Not Satisfiable"`
+    if [ -n "$RESPONSE" ]
+    then
+        echo "getRangeHTTPNegative PASS!"
+    else
+        echo "getRangeHTTPNegative FAIL!"
+    fi
 }
 
 getRangeFTPNegative () {
