@@ -26,8 +26,8 @@ Test cases:
 
 1. getRangeHTTPNormal -- get byte range in normal mode using HTTP: say, first 100 bytes. Check if result length is 100
 2. getRangeFTPNormal -- get byte range in normal mode using FTP: say, first 100 bytes. Check if result length is 100
-3. getRangeHTTPZero -- get zero bytes using HTTP. Check if result length is 0
-4. getRangeFTPZero -- get zero bytes using FTP. Check if result length is 0
+3. getRangeHTTPDoesNotExist -- get non-existing file using HTTP. Check if error is "451 Restricted"
+4. getRangeFTPDoesNotExist -- get non-existing file using HTTP. Check for error
 5. getRangeHTTPNegative -- get negative range using HTTP. Check for error.
 6. getRangeFTPNegative -- get negative range using FTP. Check for error.
 
