@@ -1,0 +1,37 @@
+Testing plan to test curl --range parameter.
+
+From man curl:
+
+curl is a tool to transfer data from or to a server, using one of the supported protocols (DICT, FILE, FTP, FTPS, GOPHER, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET and TFTP). The command is designed to work without user interaction.
+
+-r, --range <range>
+
+(HTTP FTP SFTP FILE) Retrieve a byte range (i.e a partial document) from a HTTP/1.1, FTP or SFTP server or a local FILE. Ranges can be specified in a number of ways.
+
+0-499 specifies the first 500 bytes
+500-999 specifies the second 500 bytes
+-500 specifies the last 500 bytes
+9500- specifies the bytes from offset 9500 and forward
+0-0,-1 specifies the first and last byte only(*)(HTTP)
+100-199,500-599 specifies two separate 100-byte ranges(*) (HTTP)
+
+(*) = NOTE that this will cause the server to reply with a multipart response!
+
+Only digit characters (0-9) are valid in the 'start' and 'stop' fields of the 'start-stop' range syntax. If a non-digit character is given in the range, the server's response will be unspecified, depending on the server's configuration.
+You should also be aware that many HTTP/1.1 servers do not have this feature enabled, so that when you attempt to get a range, you'll instead get the whole document.
+FTP and SFTP range downloads only support the simple 'start-stop' syntax (optionally with one of the numbers omitted). FTP use depends on the extended FTP command SIZE.
+If this option is used several times, the last one will be used.
+
+Test cases:
+
+1. getRangeHTTPNormal -- get byte range in normal mode using HTTP: say, first 100 bytes. Check if result length is 100
+2. getRangeFTPNormal -- get byte range in normal mode using FTP: say, first 100 bytes. Check if result length is 100
+3. getRangeHTTPZero -- get zero bytes using HTTP. Check if result length is 0
+4. getRangeFTPZero -- get zero bytes using FTP. Check if result length is 0
+5. getRangeHTTPNegative -- get negative range using HTTP. Check for error.
+6. getRangeFTPNegative -- get negative range using FTP. Check for error.
+
+
+
+
+
