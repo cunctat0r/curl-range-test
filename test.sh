@@ -13,11 +13,13 @@ FUNCTION_LIST=(getRangeHTTPNormal
 LOGFILE="./curl_log.log"
 HTTP_FILE="https://cdn.keycdn.com/img/cdn-stats.png"
 HTTP_ERROR_MESSAGE="416 Requested Range Not Satisfiable"
+FTP_FILE="ftp://speedtest.tele2.net/512KB.zip"
 
-getRangeHTTP () {
+getRange () {
     MIN_RANGE=$1
     MAX_RANGE=$2
-    curl -r $MIN_RANGE-$MAX_RANGE $HTTP_FILE > $LOGFILE 2>/dev/null
+    FILE=$3
+    curl -r $MIN_RANGE-$MAX_RANGE $FILE > $LOGFILE 2>/dev/null
     FILESIZE=$(stat -c%s "$LOGFILE")
 }
 
@@ -42,27 +44,27 @@ setup () {
 }
 
 getRangeHTTPNormal () {
-    getRangeHTTP 0 99
+    getRange 0 99 $HTTP_FILE
     makeDecision "getRangeHTTPNormal" 100
 }
 
 getRangeFTPNormal () {
-    local x=2
-    echo "running $x"
+    getRange 0 99 $FTP_FILE
+    makeDecision "getRangeFTPNormal" 100
 }
 
 getRangeHTTPZero () {
-    getRangeHTTP 0 0
+    getRange 0 0 $HTTP_FILE
     makeDecision "getRangeHTTPZero" 1
 }
 
 getRangeFTPZero () {
-    local x=4
-    echo "running $x"
+    getRange 0 0 $FTP_FILE
+    makeDecision "getRangeFTPZero" 1
 }
 
 getRangeHTTPNegative () {
-    getRangeHTTP -1 0
+    getRange -1 0 $HTTP_FILE
     RESPONSE=`cat $LOGFILE | grep "$HTTP_ERROR_MESSAGE"`
     if [ -n "$RESPONSE" ]
     then
@@ -73,8 +75,8 @@ getRangeHTTPNegative () {
 }
 
 getRangeFTPNegative () {
-    local x=6
-    echo "running $x"
+    getRange -1 0 $FTP_FILE
+    makeDecision "getRangeFTPNegative" 1
 }
 
 setup
