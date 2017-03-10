@@ -6,6 +6,7 @@
 FUNCTION_LIST=(getRangeHTTPNormal getRangeFTPNormal getRangeHTTPZero getRangeFTPZero getRangeHTTPNegative getRangeFTPNegative)
 
 getRangeHTTPNormal () {
+    # curl -r 0-99 https://cdn.keycdn.com/img/cdn-stats.png > test 2>/dev/null
     local x=1
     echo "running $x"
 }
