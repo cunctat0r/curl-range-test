@@ -5,16 +5,19 @@
 #
 FUNCTION_LIST=(getRangeHTTPNormal 
     getRangeFTPNormal 
-    getRangeHTTPDoesNotExist 
-    getRangeHTTPDoesNotExist 
+    getRangeHTTPZero 
+    getRangeHTTPZero 
     getRangeHTTPNegative 
     getRangeFTPNegative)
 
 LOGFILE="./curl_log.log"
 HTTP_FILE="https://cdn.keycdn.com/img/cdn-stats.png"
 HTTP_ERROR_MESSAGE="416 Requested Range Not Satisfiable"
+<<<<<<< HEAD
 HTTP_ERROR_MESSAGE="451 Requested Range Not Satisfiable"
 
+=======
+>>>>>>> bcec314f20590debdf4ada92bbc6c5fac99c1ccd
 
 getRangeHTTP () {
     MIN_RANGE=$1
