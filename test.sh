@@ -52,6 +52,14 @@ then
     done
 else
     # execute tests from command line arguments
-    :
+    for fn in $*
+    do
+        if [[ " ${FUNCTION_LIST[@]} " =~ " ${fn} " ]]
+        then
+            "$fn"
+        else
+            echo "$fn is not a valid test name"
+        fi
+    done
 fi
 
