@@ -35,8 +35,23 @@ getRangeFTPNegative () {
     echo "running $x"
 }
 
-for fn in "${FUNCTION_LIST[@]}"
-do
-    "$fn"
-done
+if [ $# -eq 0 ]
+then
+    # run all tests
+    for fn in "${FUNCTION_LIST[@]}"
+    do
+        "$fn"
+    done
+elif [ $1 = "-l" ]
+then
+    # list available tests
+    echo "Available tests:"
+    for fn in "${FUNCTION_LIST[@]}"
+    do
+        echo "$fn"
+    done
+else
+    # execute tests from command line arguments
+    :
+fi
 
