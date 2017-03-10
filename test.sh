@@ -30,6 +30,10 @@ cleanup () {
     fi
 }
 
+setup () {
+
+}
+
 getRangeHTTPNormal () {
     getRangeHTTP 0 99
     makeDecision "getRangeHTTPNormal" 100
@@ -59,6 +63,8 @@ getRangeFTPNegative () {
     local x=6
     echo "running $x"
 }
+
+setup
 
 if [ $# -eq 0 ]
 then
