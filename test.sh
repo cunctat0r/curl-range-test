@@ -40,7 +40,11 @@ cleanup () {
 }
 
 setup () {
-    :
+    NOT_INSTALLED=`rpm -q curl | grep "not installed"`
+    if [ -n "$NOT_INSTALLED" ]
+    then
+        sudo yum install curl || echo "Please ask your administrator to install cURL" && exit -1
+    fi 
 }
 
 getRangeHTTPNormal () {
