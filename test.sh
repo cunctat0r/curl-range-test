@@ -3,6 +3,11 @@
 #
 # test curl --range parameter
 #
+# usage: ./test.sh <-l>|<functions>
+#
+#   -l              list available tests
+#   <functions>     list of testing functions
+#
 FUNCTION_LIST=(getRangeHTTPNormal 
     getRangeFTPNormal 
     getRangeHTTPZero 
