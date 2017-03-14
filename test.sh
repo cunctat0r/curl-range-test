@@ -13,9 +13,13 @@ FUNCTION_LIST=(getRangeHTTPNormal
     getRangeHTTPZero 
     getRangeFTPZero 
     getRangeHTTPNegative 
-    getRangeFTPNegative)
+    getRangeFTPNegative
+    getRangeHTTPFileDoesntExist
+    getRangeFTPFileDoesntExist
+    )
 
 LOGFILE="./curl_log.log"
+ERRFILE="./curl_err.log"
 HTTP_FILE="https://cdn.keycdn.com/img/cdn-stats.png"
 HTTP_ERROR_MESSAGE="416 Requested Range Not Satisfiable"
 FTP_FILE="ftp://speedtest.tele2.net/512KB.zip"
@@ -42,6 +46,11 @@ cleanup () {
     then
         rm $LOGFILE
     fi
+    if [ -f $ERRFILE ]
+    then
+        rm $ERRFILE
+    fi
+
 }
 
 setup () {
@@ -87,6 +96,21 @@ getRangeFTPNegative () {
     getRange -1 0 $FTP_FILE
     makeDecision "getRangeFTPNegative" 1
 }
+
+getRangeFTPFileDoesntExist () {
+    curl -r 0-100 ftp://speedtest.tele2.net/5KB.zip > $LOGFILE 2>$ERRFILE
+    if [ -n $ERRFILE ]
+    then
+        RESPONSE=`cat $ERRFILE | grep "curl: (78)"`
+        if [ -n "$RESPONSE" ]
+        then
+            echo "getRangeFTPFileDoesntExist PASS!"
+            return 0
+        fi
+    fi
+    echo "getRangeFTPFileDoesntExist FAIL!"
+}
+
 
 setup
 
