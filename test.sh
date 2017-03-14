@@ -23,6 +23,8 @@ ERRFILE="./curl_err.log"
 HTTP_FILE="https://cdn.keycdn.com/img/cdn-stats.png"
 HTTP_ERROR_MESSAGE="416 Requested Range Not Satisfiable"
 FTP_FILE="ftp://speedtest.tele2.net/512KB.zip"
+FTP_FILE_DOESNT_EXIST="ftp://speedtest.tele2.net/5KB.zip"
+HTTP_FILE_DOESNT_EXIST="http://speedtest.tele2.net/5KB.zip"
 
 getRange () {
     MIN_RANGE=$1
@@ -98,7 +100,7 @@ getRangeFTPNegative () {
 }
 
 getRangeFTPFileDoesntExist () {
-    curl -r 0-100 ftp://speedtest.tele2.net/5KB.zip > $LOGFILE 2>$ERRFILE
+    curl -r 0-100 $FTP_FILE_DOESNT_EXIST > $LOGFILE 2>$ERRFILE
     if [ -n $ERRFILE ]
     then
         RESPONSE=`cat $ERRFILE | grep "curl: (78)"`
@@ -109,6 +111,20 @@ getRangeFTPFileDoesntExist () {
         fi
     fi
     echo "getRangeFTPFileDoesntExist FAIL!"
+}
+
+getRangeHTTPFileDoesntExist () {
+    curl -r 0-100 $HTTP_FILE_DOESNT_EXIST > $LOGFILE 2>$ERRFILE
+    if [ -n $LOGFILE ]
+    then
+        RESPONSE=`cat $LOGFILE | grep "404 Not Found"`
+        if [ -n "$RESPONSE" ]
+        then
+            echo "getRangeHTTPFileDoesntExist PASS!"
+            return 0
+        fi
+    fi
+    echo "getRangeHTTPFileDoesntExist FAIL!"
 }
 
 
