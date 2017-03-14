@@ -28,8 +28,8 @@ Test cases:
 2. getRangeFTPNormal -- get byte range in normal mode using FTP: say, first 100 bytes. Check if result length is 100
 3. getRangeHTTPZero -- get first byte using HTTP. Check if result length is 1
 4. getRangeFTPZero -- get forst byte using FTP. Check if result length is 1
-5. getRangeHTTPNegative -- get negative range using HTTP. Check for error.
-6. getRangeFTPNegative -- get negative range using FTP. Check for error.
+5. getngeHTTPFileDoesntExist -- try to get 100 bytes from non-existing file using HTTP protocol. Check for HTTP error code 404.
+6. getRangeFTPFileDoesntExist -- try to get 100 bytes from non-existing file using FTP protocol. Check for cURL error code 78 (The resource referenced in the URL does not exist).
 
 
 
