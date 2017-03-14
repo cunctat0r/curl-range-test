@@ -12,8 +12,6 @@ FUNCTION_LIST=(getRangeHTTPNormal
     getRangeFTPNormal 
     getRangeHTTPZero 
     getRangeFTPZero 
-    getRangeHTTPNegative 
-    getRangeFTPNegative
     getRangeHTTPFileDoesntExist
     getRangeFTPFileDoesntExist
     )
@@ -109,22 +107,10 @@ getRangeFTPZero () {
     makeDecision "getRangeFTPZero" 1
 }
 
-getRangeHTTPNegative () {
-    getRange -1 0 $HTTP_FILE
-    RESPONSE=`cat $LOGFILE | grep "$HTTP_ERROR_MESSAGE"`
-    if [ -n "$RESPONSE" ]
-    then
-        echo "getRangeHTTPNegative PASS!"
-    else
-        echo "getRangeHTTPNegative FAIL!"
-    fi
-}
-
 getRangeFTPNegative () {
     getRange -1 0 $FTP_FILE
     makeDecision "getRangeFTPNegative" 1
 }
-
 
 getRangeFTPFileDoesntExist () {
     getRange 0 99 $FTP_FILE_DOESNT_EXIST
@@ -135,7 +121,6 @@ getRangeHTTPFileDoesntExist () {
     getRange 0 99 $HTTP_FILE_DOESNT_EXIST
     makeDecisionDoesntExist "getRangeHTTPFileDoesntExist" "$LOGFILE" "404 Not Found"
 }
-
 
 setup
 
