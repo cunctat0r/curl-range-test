@@ -27,20 +27,47 @@ FTP_FILE_DOESNT_EXIST="ftp://speedtest.tele2.net/5KB.zip"
 HTTP_FILE_DOESNT_EXIST="http://speedtest.tele2.net/5KB.zip"
 
 getRange () {
+#
+#   $1 -- minimal range
+#   $2 -- maximum range
+#   $3 -- file name
+#
     MIN_RANGE=$1
     MAX_RANGE=$2
     FILE=$3
-    curl -r $MIN_RANGE-$MAX_RANGE $FILE > $LOGFILE 2>/dev/null
+    curl -r $MIN_RANGE-$MAX_RANGE $FILE > $LOGFILE 2>$ERRFILE
     FILESIZE=$(stat -c%s "$LOGFILE")
 }
 
 makeDecision () {
+#    
+#   $1 -- name of test function
+#   $2 -- expected amount of downloaded bytes
+#
     if [ $FILESIZE = $2 ]
     then
         echo "$1 PASS!"
     else
         echo "$1 FAIL!"
     fi
+}
+
+makeDecisionDoesntExist () {
+#
+#   $1 -- name of test function
+#   $2 -- checked file (ERRFILE or LOGFILE)
+#   $3 -- expected error message 
+#
+    if [ -n "$2" ]
+    then
+        RESPONSE=`cat "$2" | grep "$3"`
+        if [ -n "$RESPONSE" ]
+        then
+            echo "$1 PASS!"
+            return 0
+        fi
+    fi
+    echo "$1 FAIL!"
 }
 
 cleanup () {
@@ -52,7 +79,6 @@ cleanup () {
     then
         rm $ERRFILE
     fi
-
 }
 
 setup () {
@@ -99,32 +125,15 @@ getRangeFTPNegative () {
     makeDecision "getRangeFTPNegative" 1
 }
 
+
 getRangeFTPFileDoesntExist () {
-    curl -r 0-100 $FTP_FILE_DOESNT_EXIST > $LOGFILE 2>$ERRFILE
-    if [ -n $ERRFILE ]
-    then
-        RESPONSE=`cat $ERRFILE | grep "curl: (78)"`
-        if [ -n "$RESPONSE" ]
-        then
-            echo "getRangeFTPFileDoesntExist PASS!"
-            return 0
-        fi
-    fi
-    echo "getRangeFTPFileDoesntExist FAIL!"
+    getRange 0 99 $FTP_FILE_DOESNT_EXIST
+    makeDecisionDoesntExist "getRangeFTPFileDoesntExist" "$ERRFILE" "curl: (78)"
 }
 
 getRangeHTTPFileDoesntExist () {
-    curl -r 0-100 $HTTP_FILE_DOESNT_EXIST > $LOGFILE 2>$ERRFILE
-    if [ -n $LOGFILE ]
-    then
-        RESPONSE=`cat $LOGFILE | grep "404 Not Found"`
-        if [ -n "$RESPONSE" ]
-        then
-            echo "getRangeHTTPFileDoesntExist PASS!"
-            return 0
-        fi
-    fi
-    echo "getRangeHTTPFileDoesntExist FAIL!"
+    getRange 0 99 $HTTP_FILE_DOESNT_EXIST
+    makeDecisionDoesntExist "getRangeHTTPFileDoesntExist" "$LOGFILE" "404 Not Found"
 }
 
 
